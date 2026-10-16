@@ -1,20 +1,103 @@
-                                                           ABOUT BLOOD BANK
-                                                                  
-![BloodBank](https://user-images.githubusercontent.com/35656849/196025452-30c737e8-5834-4d9e-ba3f-7f9269c4f29a.png)
+<div align="center">
 
+# Blood Sphere
 
-As part of our team discussion, we found out blood donation is essential to the health and medical progress of every country, specially the developing countries that experience a shortage of suitable blood types and blood donors. Therefore, we found that the path to clinical or medical advancement is to address the issue of blood scarcity or unavailability. We thus made the decision to create a mobile application to solve these difficulties.
+A Flutter mobile app prototype that connects blood donors with people who need blood, using Firebase Authentication for accounts.
 
-As a team, we were inspired to draft a blood bank application during the COVID time. We were in Nepal during the time of COVID-19, and a close friend of ours from our home country resided nearby. He was hospitalized and isolated at the time because of COVID.  His condition wasn't terrific, therefore the doctor instructed his parents to bring the blood (AB+). Finding the right blood was a significant challenge. We, his family, and other friends found it challenging to look for the blood. We were getting blood, but it wasn't the proper blood group. After several failed efforts and a great deal of work, and a lengthy period, we succeeded in getting the blood. We were discussing how to handle this situation once this occurred. That gave us the idea to develop an app that would help both blood donors and receivers. With the use of this app's search function, blood donors may be quickly found. Users of the app may log in and search for nearby blood receivers or donors by inputting their location. Even though it is simple to use, it has the power to save countless lives.
+<img src="https://img.shields.io/badge/Flutter-02569B?style=flat-square&logo=flutter&logoColor=white" alt="Flutter"/>
+<img src="https://img.shields.io/badge/Dart-0175C2?style=flat-square&logo=dart&logoColor=white" alt="Dart"/>
+<img src="https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black" alt="Firebase"/>
 
-This software is created using the programming language dart, flutter for the front end, and firebase for the back end. We divided our job between ourselves and then worked individually on the front end and back end. The front end first tried to use flutter, however owing to several failures, we had trouble delivering output. Our back end also started off by utilizing Firebase.
+</div>
 
-The inaccuracy in our project was the hardest part. We first had trouble integrating the front end and back end. Additionally, there were various obstacles and hurdles in developing a user-friendly user interface. We had problems in giving users access to all of the functionalities with just one tap. But in the end, we were able to resolve every issue.
+> Team hackathon project. Status: early prototype. Sign-up and sign-in work against Firebase. The donor list and search are UI with sample data.
 
-Actually, throughout this hackathon, we learnt and had fun with our project. We developed our ability to work together and communicate with each other. The activity truly appeals to us. In addition to understanding how to implement user authentication, we also learnt how to integrate the Firebase platform with our Flutter apps.
+## Why we built it
 
-We are quite pleased and delighted with our project. We could have added more features and detailed information to the application if we had more time. Other than that, we are happy and proud of our project.
+During COVID-19 in Nepal, a close friend was hospitalized and his doctor asked his family to bring AB+ blood. Finding the right blood group took the family and their friends several failed attempts and a long time. That experience led our team to design an app where donors and recipients can find each other quickly by blood group and location, especially in places that face shortages of suitable blood types and donors.
 
-Built with : Flutter, Firebase, Dart, Google login API, firebase auth and Java.
+## Features
 
+- **Onboarding**: a swipeable splash carousel ("Once a blood donor, always a lifesaver!") with a "Ready To Donate?" call to action.
+- **Email sign-up**: `createUserWithEmailAndPassword` through Firebase Auth, with form validation and a progress overlay (`modal_progress_hud_nsn`).
+- **Email sign-in**: `signInWithEmailAndPassword`, then a login success screen that leads to Home.
+- **Home**: header with a donor search field, a "Donate Blood Save Life!" banner, and a "Donors Near You" list of cards.
+- **Donor details**: tapping a card opens a detail screen with the donor's photo, name and description, including blood group.
+- **Navigation**: bottom navigation bar between Home and Profile, and a forgot-password form.
+- **Theming**: red primary color and the Muli font family, bundled under `assets/fonts/muli/`.
 
+## Tech stack
+
+| Layer | Technology |
+| --- | --- |
+| Framework | Flutter (Dart SDK `>=2.17.6 <3.0.0`) |
+| Auth | Firebase Core, Firebase Auth |
+| Data | `cloud_firestore` (declared, not yet used in code) |
+| State and UI | `provider` (declared), `flutter_svg`, `modal_progress_hud_nsn` |
+| Platforms | Android, iOS, web, macOS, Windows and Linux runners generated by Flutter |
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A[Flutter app] -->|email sign-up / sign-in| B[Firebase Auth]
+    A --> C[Sample donor data in models/personlist.dart]
+```
+
+## Project structure
+
+```text
+lib/
+├── main.dart                 # Firebase.initializeApp, MaterialApp
+├── routes.dart               # named routes
+├── theme.dart, constants.dart, size_config.dart
+├── models/
+│   └── personlist.dart       # Person model + sample donors
+├── components/               # buttons, form errors, donor card, bottom nav
+└── screens/
+    ├── splash/               # onboarding (PromptScreen)
+    ├── sign_in/  sign_up/  forgot_password/  login_success/
+    ├── home/                 # header, search field, banner, donor list
+    ├── details/              # donor detail view
+    └── profile/
+assets/
+├── fonts/muli/
+├── icons/
+└── images/
+```
+
+## Getting started
+
+### Prerequisites
+
+- Flutter SDK compatible with Dart 2.17 (Flutter 3.0 to 3.x before Dart 3)
+- A Firebase project with **Email/Password** sign-in enabled
+
+### Configure Firebase
+
+- **Android**: the app expects `android/app/google-services.json` (applied with the `com.google.gms.google-services` plugin). Replace it with the config file from your own Firebase project.
+- **iOS**: add your `GoogleService-Info.plist` to `ios/Runner/`. It is not included in the repo.
+
+### Run
+
+```bash
+flutter pub get
+flutter run
+```
+
+## Limitations
+
+- Donors are five hardcoded sample entries. Firestore is a dependency but nothing reads from or writes to it yet.
+- The search field only prints input to the console, and there is no location-based matching yet.
+- The forgot-password "Continue" button and the "Sign in with" social button have empty handlers. Google sign-in is not implemented.
+- The profile screen shows only a profile picture.
+- Parts of the UI were adapted from an e-commerce Flutter template. Names such as `ProductCard` and `Cart`, and sample product images in `assets/images/`, are still present.
+- `android/app/google-services.json` is committed. Firebase client config is not a secret, but restrict the API key and lock down Firebase security rules before real use.
+
+## What we learned
+
+The team split frontend and backend work. The hardest parts were integrating the Flutter frontend with Firebase and making core actions reachable in a single tap. Along the way we learned how to add Firebase to a Flutter app and implement user authentication.
+
+---
+
+Built by [Abhishek Yadav](https://github.com/abhiishek340) and hackathon teammates
